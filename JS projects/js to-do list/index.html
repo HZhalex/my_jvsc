@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<div class="container">
+    <h2>To-Do List Pro</h2>
+    
+    <div id="saveMsg">✔ Saved!</div>
+
+    <div class="input-group">
+        <input id="task" type="text" placeholder="Nhập công việc mới...">
+        <button class="btn-add" onclick="addTask()">Add</button>
+    </div>
+
+    <!-- Thanh công cụ Lọc và Sắp xếp -->
+    <div class="tools">
+        <div class="filter-btns">
+            <!-- Truyền tham số type để biết đang lọc cái gì -->
+            <button id="btn-all" class="active" onclick="setFilter('all')">All</button>
+            <button id="btn-active" onclick="setFilter('active')">Active</button>
+            <button id="btn-done" onclick="setFilter('done')">Done</button>
+        </div>
+        <button class="btn-sort" onclick="sortTasks()">Sort A-Z</button>
+    </div>
+
+    <ul id="list"></ul>
+    
+    <button class="btn-clear" onclick="clearAll()">Clear All</button>
+</div>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
