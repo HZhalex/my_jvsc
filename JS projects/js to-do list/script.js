@@ -5,6 +5,9 @@ const listTask = document.getElementById("list");
 const taskInput = document.getElementById("task");
 const saveMsg = document.getElementById("saveMsg");
 
+console.log(listTask,taskInput,saveMsg);
+
+
 taskInput.addEventListener("keydown", function(event) {
     if(event.key === "Enter") addTask();
 });
@@ -17,9 +20,9 @@ function loadTasks() {
 }
 
 function saveTasks() {
-    localStorage.setItem("task", JSON.stringify(tasks));
+    localStorage.setItem("taskPro", JSON.stringify(tasks));
     saveMsg.style.display = "block";
-    setTimeout(() => saveMsg.style.display = "none", 1500);
+    setTimeout(() => saveMsg.style.display = "none", 3000);
 }
 
 function addTask() {
@@ -73,24 +76,44 @@ function setFilter(filterType){
     document.getElementById("btn-active").classList.remove("active");
     document.getElementById("btn-done").classList.remove("active");
     document.getElementById("btn-" + filterType).classList.add("active");
+
+    displayTasks();
 }
 
 function sortTasks(){
+    // .sort() thay đổi trực tiếp mảng gốc (mutation).
     tasks.sort((a,b) => a.text.localeCompare(b.text));
     saveTasks();
     displayTasks();
 }
 
 function displayTasks() {
+
     let html = "";
-    for (let i = 0; i < tasks.length; i++){
-        html += "<li>" + tasks[i] + 
-        " <button onclick='removeTask(" + i + ")'>x</button></li>";
+    let tasksToRender = tasks;
+
+    if(currentFilter === "active"){
+        tasksToRender = tasks.filter(t => t.completed === false);
+    } else if(currentFilter === "done"){
+        tasksToRender = tasks.filter(t => t.completed === true);
+    }
+
+    for (let i = 0; i < tasksToRender.length; i++){
+        let task = tasksToRender[i];
+        let liClass = task.completed ? "completed" : "";
+        let isChecked = task.completed ? "checked" : "";
+
+        html += `
+            <li class="${liClass}">
+                <input type="checkbox" ${isChecked} onchange="toggleTask(${task.id})">
+                <span class="task-text">${task.text}</span>
+                <button class="btn-edit" onclick="editTask(${task.id})">Edit</button>
+                <button class="btn-delete" onclick="removeTask(${task.id})">x</button>
+            </li>
+        `;
     }
     listTask.innerHTML = html;
 }
-
-
 
 function clearAll(){
     if (confirm("Are you sure you want to clear all tasks?")) {
@@ -99,10 +122,6 @@ function clearAll(){
         displayTasks();
     }
 }
-
-
-
-
 
 loadTasks();
 displayTasks();
