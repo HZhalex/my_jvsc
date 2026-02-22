@@ -1,5 +1,5 @@
-let tasks = ["hung", "hieu", "huy"];
-let curentFilter = "all";
+let tasks = [];
+let currentFilter = "all";
 
 const listTask = document.getElementById("list");
 const taskInput = document.getElementById("task");
@@ -40,14 +40,46 @@ function addTask() {
 }
 
 function toggleTask(id){
-    let task = task.find(t => t.id === id);
+    let task = tasks.find(t => t.id === id);
     if(task){
-        task.completed = !task.complete;
+        task.completed = !task.completed;
         saveTasks();
         displayTasks();
     }
 }
+// Object và Array là reference type
+function editTask(id){
+    let task = tasks.find(t => t.id === id);
+    if(task){
+        let newText = prompt("Edit task:",task.text);
+        if(newText !== null && newText.trim() !== ""){
+            task.text = newText.trim();
+            saveTasks();
+            displayTasks();
+        }
+    }
+}
 
+function removeTask(id) {
+    tasks = tasks.filter(t => t.id !== id);
+    saveTasks();
+    displayTasks();
+}
+
+function setFilter(filterType){ 
+    currentFilter = filterType;
+
+    document.getElementById("btn-all").classList.remove("active");
+    document.getElementById("btn-active").classList.remove("active");
+    document.getElementById("btn-done").classList.remove("active");
+    document.getElementById("btn-" + filterType).classList.add("active");
+}
+
+function sortTasks(){
+    tasks.sort((a,b) => a.text.localeCompare(b.text));
+    saveTasks();
+    displayTasks();
+}
 
 function displayTasks() {
     let html = "";
@@ -58,11 +90,6 @@ function displayTasks() {
     listTask.innerHTML = html;
 }
 
-function removeTask(i) {
-    tasks.splice(i, 1);
-    saveTasks();
-    displayTasks();
-}
 
 
 function clearAll(){
